@@ -1,0 +1,177 @@
+/* ===== Base ===== */
+:root {
+  --verde: #1b7a3e;
+  --verde-oscuro: #14532d;
+  --verde-claro: #e6f4ea;
+  --amarillo: #f5b014;
+  --amarillo-claro: #fff4d9;
+  --rojo: #d90429;
+  --rojo-claro: #fde8ea;
+  --azul: #3f37c9;
+  --azul-claro: #e2eafc;
+  --gris-900: #1f2937;
+  --gris-700: #374151;
+  --gris-500: #6b7280;
+  --gris-300: #d1d5db;
+  --gris-100: #f4f4f4;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--gris-900);
+  background: #f8f9fa;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { min-height: 100svh; }
+
+h1, h2, h3 { color: var(--gris-900); line-height: 1.2; }
+h1 { font-size: 1.6rem; margin: 0 0 0.4rem; }
+h2 { font-size: 1.25rem; margin: 0 0 0.4rem; }
+h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+p { margin: 0; }
+a { color: var(--azul); }
+
+/* Los campos SIEMPRE con texto oscuro y legible */
+input, select, textarea { font: inherit; color: #111827; background-color: #fff; }
+input::placeholder, textarea::placeholder { color: #6b7280; opacity: 1; }
+button { font: inherit; cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--amarillo); outline-offset: 2px; }
+
+/* ===== Piezas reutilizables ===== */
+.icono { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+
+.contenedor { width: 100%; max-width: 720px; margin: 0 auto; padding: 20px 16px; }
+.contenedor-angosto { max-width: 480px; }
+.con-barra-inferior { padding-bottom: calc(86px + env(safe-area-inset-bottom)); }
+
+.tarjeta { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07); border: 1px solid #eceff1; }
+.tarjeta-pad { padding: 22px 20px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 46px; padding: 0 18px; border-radius: 10px; border: 1px solid transparent;
+  font-weight: 700; font-size: 0.95rem; text-decoration: none; line-height: 1;
+}
+.btn-bloque { width: 100%; }
+.btn-primario { background: var(--verde); color: #fff; }
+.btn-amarillo { background: var(--amarillo); color: #4a3400; }
+.btn-borde { background: #fff; color: var(--verde); border-color: var(--verde); }
+.btn-gris { background: var(--gris-100); color: var(--gris-700); border-color: var(--gris-300); }
+.btn-peligro { background: var(--rojo); color: #fff; }
+.btn-peligro-borde { background: #fff; color: var(--rojo); border-color: var(--rojo); }
+.btn:disabled { opacity: 0.55; }
+
+.campo { display: flex; flex-direction: column; gap: 6px; }
+.campo > label { font-weight: 600; font-size: 0.85rem; color: var(--gris-700); }
+.campo input, .campo select {
+  width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid var(--gris-300);
+  border-radius: 10px; font-size: 1rem;
+}
+.campo input:focus, .campo select:focus { border-color: var(--verde); outline: 2px solid var(--verde-claro); }
+.campo-error input { border-color: var(--rojo); }
+.texto-error { color: var(--rojo); font-size: 0.8rem; }
+.texto-ayuda { color: var(--gris-500); font-size: 0.8rem; }
+.campo-con-boton { position: relative; }
+.campo-con-boton input { padding-right: 48px; }
+.campo-con-boton button {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  border: 0; background: none; color: var(--gris-500); border-radius: 8px;
+}
+
+.formulario { display: flex; flex-direction: column; gap: 16px; }
+.fila-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.casilla { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--gris-700); }
+.casilla input { width: 20px; height: 20px; margin: 1px 0 0; flex-shrink: 0; accent-color: var(--verde); }
+
+.alerta { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; line-height: 1.4; }
+.alerta .icono { margin-top: 1px; }
+.alerta-error { background: var(--rojo-claro); color: #8a0220; }
+.alerta-ok { background: var(--verde-claro); color: var(--verde-oscuro); }
+.alerta-aviso { background: var(--amarillo-claro); color: #7a5200; }
+.alerta-info { background: var(--azul-claro); color: #2a2590; }
+
+.segmentado { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--gris-100); border-radius: 12px; }
+.segmentado button { min-height: 42px; border: 0; border-radius: 9px; background: transparent; font-weight: 700; color: var(--gris-500); }
+.segmentado button.activo { background: #fff; color: var(--verde); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12); }
+
+.centro-pantalla { min-height: calc(100svh - 70px); display: flex; align-items: center; justify-content: center; padding: 20px 16px; }
+
+/* ===== Barra superior ===== */
+.nav { position: sticky; top: 0; z-index: 1000; color: #fff; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, var(--verde), var(--verde-oscuro)); padding-top: env(safe-area-inset-top); }
+.nav-admin { background: var(--gris-900); }
+.nav-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; min-height: 60px; max-width: 1200px; margin: 0 auto; }
+.nav-marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 700; font-size: 1.05rem; min-width: 0; }
+.nav-marca span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-acciones { display: flex; align-items: center; gap: 8px; }
+.nav-icono { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.12); color: #fff; text-decoration: none; }
+.nav-enlaces { display: flex; gap: 6px; overflow-x: auto; padding: 0 16px 10px; max-width: 1200px; margin: 0 auto; scrollbar-width: none; }
+.nav-enlaces::-webkit-scrollbar { display: none; }
+.nav-enlaces a { flex-shrink: 0; display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border-radius: 999px;
+  color: #fff; text-decoration: none; font-size: 0.88rem; font-weight: 600; background: rgba(255, 255, 255, 0.1); }
+.nav-enlaces a.activo { background: var(--amarillo); color: #4a3400; }
+
+/* ===== Barra inferior (alumnos y docentes) ===== */
+.barra-inferior { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; background: #fff; border-top: 1px solid #e5e7eb;
+  padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.06); }
+.barra-inferior-fila { display: flex; max-width: 560px; margin: 0 auto; }
+.bi-item { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  min-height: 60px; padding: 6px 2px; border: 0; background: none; color: var(--gris-500); text-decoration: none; font-size: 0.7rem; font-weight: 600; }
+.bi-item.activo { color: var(--verde); }
+.bi-insignia { position: absolute; top: 5px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px;
+  background: var(--rojo); color: #fff; font-size: 0.65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.bi-punto { position: absolute; top: 8px; left: calc(50% + 8px); width: 10px; height: 10px; border-radius: 50%; background: var(--verde); border: 2px solid #fff; }
+
+/* ===== Hoja inferior / modal ===== */
+.hoja-fondo { position: fixed; inset: 0; z-index: 1500; background: rgba(0, 0, 0, 0.45); display: flex; align-items: flex-end; justify-content: center; }
+.hoja { background: #fff; width: 100%; max-width: 560px; max-height: 85vh; overflow-y: auto; border-radius: 20px 20px 0 0;
+  padding: 20px 18px calc(20px + env(safe-area-inset-bottom)); }
+.hoja-centrada { align-items: center; padding: 16px; }
+.hoja-centrada .hoja { border-radius: 18px; max-width: 440px; }
+.hoja-lista { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.hoja-lista button { display: flex; align-items: center; justify-content: space-between; min-height: 50px; padding: 0 16px; border-radius: 12px;
+  border: 1px solid var(--gris-300); background: #fff; font-weight: 600; color: var(--gris-900); text-align: left; }
+.hoja-lista button.activo { border-color: var(--verde); background: var(--verde-claro); color: var(--verde-oscuro); }
+
+/* ===== Avisos (toasts) ===== */
+.avisos { position: fixed; bottom: calc(76px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 2000;
+  width: min(92vw, 440px); display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: none; }
+.aviso { pointer-events: auto; display: flex; align-items: flex-start; gap: 10px; padding: 12px 12px 12px 14px; border-radius: 12px; background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); border-left: 5px solid var(--azul); font-size: 0.92rem; color: var(--gris-900); }
+.aviso-ok { border-left-color: var(--verde); } .aviso-ok .icono-aviso { color: var(--verde); }
+.aviso-error { border-left-color: var(--rojo); } .aviso-error .icono-aviso { color: var(--rojo); }
+.aviso-aviso { border-left-color: var(--amarillo); } .aviso-aviso .icono-aviso { color: #b07a00; }
+.aviso-info .icono-aviso { color: var(--azul); }
+.aviso-texto { flex: 1; padding-top: 1px; }
+.aviso-cerrar { border: 0; background: none; color: var(--gris-500); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+
+/* Banner de pedido listo */
+.banner-listo { background: var(--verde); color: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 10px;
+  text-align: left; font-weight: 600; font-size: 0.92rem; }
+.banner-listo a { color: #fff; font-weight: 800; }
+
+/* ===== Impresión del ticket (impresora térmica 80mm) ===== */
+@media print {
+  .no-imprimir, nav, .nav, .barra-inferior, .avisos, .banner-listo { display: none !important; }
+  body * { visibility: hidden; }
+  .ticket-imprimible, .ticket-imprimible * { visibility: visible; }
+  .ticket-imprimible { position: absolute; top: 0; left: 0; width: 80mm; margin: 0; padding: 4mm; box-shadow: none !important; border: none !important; }
+  @page { size: 80mm auto; margin: 0; }
+}
+
+@media (max-width: 380px) {
+  .fila-2 { grid-template-columns: 1fr; }
+}

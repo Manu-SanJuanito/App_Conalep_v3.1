@@ -1,0 +1,18 @@
+# Secretos y datos locales: NUNCA se suben a GitHub
+.env
+.env.*
+!.env.example
+*.sqlite3
+db.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+staticfiles/
+
+# Editor / sistema
+.vscode/
+.idea/
+.DS_Store
