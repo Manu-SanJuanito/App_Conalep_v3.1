@@ -78,3 +78,15 @@ Luego quita `REQUIRE_EMAIL_VERIFICATION=False`. Prueba registrándote con un cor
 - [ ] Fuera de horario: el alumno ve "cafetería cerrada"; cocina sí entra.
 - [ ] Borrar cuenta de prueba desde "Mi cuenta".
 - [ ] Revisar `https://TU-BACKEND/api/menu/` sin sesión → debe dar 401.
+
+## 8. Fotos de productos (Cloudinary)
+1. Crea cuenta gratis en cloudinary.com. Copia tu **Cloud name** (aparece en el Dashboard).
+2. *Settings → Upload → Upload presets → Add upload preset*:
+   - Signing mode: **Unsigned**
+   - Folder: `cafeteria`
+   - Allowed formats: `jpg,png,webp` · Max file size: 5 MB (limita abusos)
+   - Guarda y copia el **nombre del preset**.
+3. En **Vercel → Environment Variables** agrega `VITE_CLOUDINARY_CLOUD` y `VITE_CLOUDINARY_PRESET` y haz **Redeploy**.
+4. En Railway no necesitas nada (el backend solo acepta fotos de `res.cloudinary.com`; se puede cambiar con `IMAGENES_HOSTS`).
+5. Entra como cocina → pestaña **Fotos** → "Subir foto". También puedes agregar foto al crear un producto nuevo.
+Nota: el preset unsigned es público (viaja en la página); por eso se limita formato y tamaño en Cloudinary.

@@ -16,6 +16,7 @@ import CrearProductoView from '../pages/cocina/CrearProductoView';
 import RegistrarLoteView from '../pages/cocina/RegistrarLoteView';
 import AlertasStockView from '../pages/cocina/AlertasStockView';
 import CierreCajaView from '../pages/cocina/CierreCajaView';
+import ImagenesProductosView from '../pages/cocina/ImagenesProductosView';
 
 const inicioSegunRol = (sesion) => (sesion.esAdmin ? '/cocina/pedidos' : '/menu');
 
@@ -74,6 +75,7 @@ const AppRoutes = ({ estado }) => (
     <Route path="/cocina/pedidos" element={<SoloPersonal><GestionPedidosView /></SoloPersonal>} />
     <Route path="/cocina/ticket" element={<SoloPersonal><TicketCocinaView /></SoloPersonal>} />
     <Route path="/cocina/productos/nuevo" element={<SoloPersonal><CrearProductoView /></SoloPersonal>} />
+    <Route path="/cocina/fotos" element={<SoloPersonal><ImagenesProductosView /></SoloPersonal>} />
     <Route path="/cocina/almacen" element={<SoloPersonal><RegistrarLoteView /></SoloPersonal>} />
     <Route path="/cocina/alertas" element={<SoloPersonal><AlertasStockView /></SoloPersonal>} />
     <Route path="/cocina/cierre" element={<SoloPersonal><CierreCajaView /></SoloPersonal>} />

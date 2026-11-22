@@ -8,6 +8,7 @@ import Icono from './Icono';
 const ENLACES_COCINA = [
   { a: '/cocina/pedidos', texto: 'Pedidos' },
   { a: '/cocina/productos/nuevo', texto: 'Nuevo producto' },
+  { a: '/cocina/fotos', texto: 'Fotos' },
   { a: '/cocina/almacen', texto: 'Lotes' },
   { a: '/cocina/alertas', texto: 'Alertas de stock' },
   { a: '/cocina/cierre', texto: 'Cierre de caja' },

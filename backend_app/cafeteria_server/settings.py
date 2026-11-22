@@ -239,3 +239,11 @@ EMAIL_FROM_NOMBRE = os.environ.get('EMAIL_FROM_NOMBRE', 'Cafetería CONALEP')
 # Si es False, las cuentas quedan activas al registrarse (sin verificar el
 # correo). Úsalo solo mientras configuras el servicio de correo.
 REQUIRE_EMAIL_VERIFICATION = env_bool('REQUIRE_EMAIL_VERIFICATION', True)
+
+
+# ---------------------------------------------------------------------------
+# Imágenes de productos
+# ---------------------------------------------------------------------------
+# Las fotos se suben a Cloudinary desde el panel; el servidor solo acepta
+# direcciones https de estos dominios (evita que metan links de cualquier sitio).
+IMAGENES_HOSTS = env_lista('IMAGENES_HOSTS', 'res.cloudinary.com')

@@ -46,7 +46,7 @@ def datos_registro(**cambios):
     return datos
 
 
-@override_settings(HORARIO_ACTIVO=False)
+@override_settings(HORARIO_ACTIVO=False, REQUIRE_EMAIL_VERIFICATION=True)
 class PruebasBase(TestCase):
     def setUp(self):
         cache.clear()
@@ -455,3 +455,55 @@ class PerfilTests(PruebasBase):
         r = cliente_con_token(personal).delete('/api/auth/perfil/', {'password': CLAVE}, format='json')
         self.assertEqual(r.status_code, 403)
         self.assertTrue(User.objects.filter(pk=personal.pk).exists())
+
+
+@override_settings(HORARIO_ACTIVO=False)
+class ImagenesProductoTests(PruebasBase):
+    URL_OK = 'https://res.cloudinary.com/demo/image/upload/v1/cafeteria/galletas.jpg'
+
+    def setUp(self):
+        super().setUp()
+        self.personal = User.objects.create_user(username='cocina', password=CLAVE, is_staff=True)
+        self.alumno = crear_cuenta()
+        self.categoria = Categoria.objects.create(nombre='Snacks')
+        self.producto = Producto.objects.create(nombre='Galletas', precio=Decimal('15.00'), categoria=self.categoria)
+
+    def test_cocina_pone_y_quita_la_foto(self):
+        cocina = cliente_con_token(self.personal)
+        url = f'/api/cocina/productos/{self.producto.id}/imagen/'
+        r = cocina.patch(url, {'imagen_url': self.URL_OK}, format='json')
+        self.assertEqual(r.status_code, 200, r.data)
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.imagen_url, self.URL_OK)
+
+        quitar = cocina.patch(url, {'imagen_url': ''}, format='json')
+        self.assertEqual(quitar.status_code, 200)
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.imagen_url, '')
+
+    def test_rechaza_direcciones_de_otros_sitios_o_sin_https(self):
+        cocina = cliente_con_token(self.personal)
+        url = f'/api/cocina/productos/{self.producto.id}/imagen/'
+        for malo in ['https://sitio-malo.com/a.jpg', 'http://res.cloudinary.com/a.jpg', 'javascript:alert(1)']:
+            self.assertEqual(cocina.patch(url, {'imagen_url': malo}, format='json').status_code, 400, malo)
+
+    def test_un_alumno_no_puede_cambiar_fotos(self):
+        r = cliente_con_token(self.alumno).patch(
+            f'/api/cocina/productos/{self.producto.id}/imagen/', {'imagen_url': self.URL_OK}, format='json')
+        self.assertEqual(r.status_code, 403)
+
+    def test_el_menu_incluye_la_imagen(self):
+        Producto.objects.filter(pk=self.producto.pk).update(imagen_url=self.URL_OK)
+        r = cliente_con_token(self.alumno).get('/api/menu/')
+        self.assertEqual(r.status_code, 200)
+        productos = [p for cat in r.data for p in cat['productos']]
+        self.assertEqual(productos[0]['imagen_url'], self.URL_OK)
+
+    def test_crear_producto_con_imagen(self):
+        cocina = cliente_con_token(self.personal)
+        r = cocina.post('/api/cocina/productos/crear/', {
+            'nombre': 'Jugo', 'precio': '20.00', 'categoria_nombre': 'Bebidas', 'es_preparado': True,
+            'stock_minimo_alerta': 5, 'imagen_url': self.URL_OK,
+        }, format='json')
+        self.assertEqual(r.status_code, 201, r.data)
+        self.assertEqual(Producto.objects.get(nombre='Jugo').imagen_url, self.URL_OK)

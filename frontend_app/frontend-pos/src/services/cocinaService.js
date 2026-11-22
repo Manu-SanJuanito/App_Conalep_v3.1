@@ -83,7 +83,14 @@ const cocinaService = {
    * Da de alta un producto que todavía no existe en el catálogo (ej. "Paletas" cuando solo había "Galletas").
    * categoriaNombre puede ser una categoría ya existente o una nueva: el backend la crea si no la encuentra.
    */
-  crearProducto: async ({ nombre, descripcion, precio, categoriaNombre, esPreparado, stockMinimoAlerta }) => {
+  /** Catálogo completo (con fotos) para la pantalla de fotos. */
+  obtenerMenuConFotos: async () => (await api.get('/menu/')).data,
+
+  /** Cambia la foto de un producto; con '' la quita. */
+  actualizarImagenProducto: async (productoId, imagenUrl) =>
+    (await api.patch(`/cocina/productos/${productoId}/imagen/`, { imagen_url: imagenUrl })).data,
+
+  crearProducto: async ({ nombre, descripcion, precio, categoriaNombre, esPreparado, stockMinimoAlerta, imagenUrl = '' }) => {
     try {
       const response = await api.post('/cocina/productos/crear/', {
         nombre,
@@ -92,6 +99,7 @@ const cocinaService = {
         categoria_nombre: categoriaNombre,
         es_preparado: esPreparado,
         stock_minimo_alerta: stockMinimoAlerta,
+        imagen_url: imagenUrl,
       });
       return response.data;
     } catch (error) {

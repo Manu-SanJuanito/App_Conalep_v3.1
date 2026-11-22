@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     ActualizarEstadoPedidoView,
+    ActualizarImagenProductoView,
     AlertasStockCriticoView,
     CierreCajaDiarioView,
     CrearPedidoView,
@@ -43,6 +44,7 @@ urlpatterns = [
     path('cocina/alertas-stock/', AlertasStockCriticoView.as_view(), name='cocina-alertas-stock'),
     path('cocina/registrar-lote/', RegistrarLoteAlmacenView.as_view(), name='cocina-registrar-lote'),
     path('cocina/productos/crear/', CrearProductoView.as_view(), name='cocina-crear-producto'),
+    path('cocina/productos/<int:producto_id>/imagen/', ActualizarImagenProductoView.as_view(), name='cocina-imagen-producto'),
     path('cocina/categorias/', ListaCategoriasView.as_view(), name='cocina-lista-categorias'),
     path('cocina/cierre-caja/', CierreCajaDiarioView.as_view(), name='cocina-cierre-caja'),
 ]

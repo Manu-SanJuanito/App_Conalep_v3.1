@@ -2,6 +2,7 @@ import logging
 import re
 import secrets
 from decimal import Decimal
+from urllib.parse import urlparse
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -18,6 +19,17 @@ from inventario import cuentas
 from inventario.models import Categoria, Producto, Alumno, Pedido, DetallePedido, CodigoDocente
 
 logger = logging.getLogger(__name__)
+
+
+def validar_imagen_url(valor):
+    """Acepta vacío (sin foto) o una dirección https de un dominio permitido (Cloudinary)."""
+    valor = (valor or '').strip()
+    if not valor:
+        return ''
+    partes = urlparse(valor)
+    if partes.scheme != 'https' or (partes.hostname or '') not in settings.IMAGENES_HOSTS:
+        raise serializers.ValidationError('La imagen debe estar alojada en Cloudinary (dirección https).')
+    return valor
 
 NOMBRE_VALIDO = re.compile(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9][A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'\-]{1,39}$")
 
@@ -166,7 +178,7 @@ class ProductoMenuSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Producto
-        fields = ['id', 'nombre', 'descripcion', 'precio', 'es_preparado', 'stock_disponible']
+        fields = ['id', 'nombre', 'descripcion', 'precio', 'es_preparado', 'stock_disponible', 'imagen_url']
 
     def get_stock_disponible(self, obj):
         if obj.es_preparado:
@@ -202,10 +214,14 @@ class ProductoCrearSerializer(serializers.ModelSerializer):
     # Así "Paletas" puede darse de alta sin tener que entrar antes al admin de Django.
     categoria_nombre = serializers.CharField(write_only=True, max_length=100)
     categoria = CategoriaSerializer(read_only=True)
+    imagen_url = serializers.CharField(required=False, allow_blank=True, max_length=300)
 
     class Meta:
         model = Producto
-        fields = ['id', 'nombre', 'descripcion', 'precio', 'categoria', 'categoria_nombre', 'es_preparado', 'stock_minimo_alerta']
+        fields = ['id', 'nombre', 'descripcion', 'precio', 'categoria', 'categoria_nombre', 'es_preparado', 'stock_minimo_alerta', 'imagen_url']
+
+    def validate_imagen_url(self, value):
+        return validar_imagen_url(value)
 
     def validate_nombre(self, value):
         nombre_limpio = value.strip()
@@ -420,3 +436,11 @@ class CambiarEstadoPedidoSerializer(serializers.ModelSerializer):
 
             pedido.save()
             return pedido
+
+class ImagenProductoSerializer(serializers.Serializer):
+    """Cambiar o quitar la foto de un producto ya existente."""
+
+    imagen_url = serializers.CharField(allow_blank=True, max_length=300)
+
+    def validate_imagen_url(self, value):
+        return validar_imagen_url(value)

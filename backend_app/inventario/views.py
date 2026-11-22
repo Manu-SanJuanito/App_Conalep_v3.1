@@ -26,6 +26,7 @@ from .models import Categoria, LoteAlmacen, Pedido, Producto
 from .serializers import (
     CambiarEstadoPedidoSerializer,
     CategoriaSerializer,
+    ImagenProductoSerializer,
     MenuCategoriaSerializer,
     PedidoSerializer,
     PerfilEdicionSerializer,
@@ -404,6 +405,23 @@ class AlertasStockCriticoView(APIView):
 # =====================================================================
 # 🆕 ALTA DE PRODUCTOS NUEVOS (no requiere entrar al admin de Django)
 # =====================================================================
+class ActualizarImagenProductoView(APIView):
+    """La cocina cambia (o quita, con texto vacío) la foto de un producto."""
+
+    permission_classes = [IsAdminUser]
+
+    def patch(self, request, producto_id):
+        producto = Producto.objects.filter(pk=producto_id).first()
+        if producto is None:
+            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ImagenProductoSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        producto.imagen_url = serializer.validated_data['imagen_url']
+        producto.save(update_fields=['imagen_url'])
+        return Response({"mensaje": "Foto actualizada.", "imagen_url": producto.imagen_url})
+
+
 class CrearProductoView(APIView):
     permission_classes = [IsAdminUser]
 

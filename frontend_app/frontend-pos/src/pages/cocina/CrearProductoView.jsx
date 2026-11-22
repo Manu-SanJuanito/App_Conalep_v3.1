@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import cocinaService from '../../services/cocinaService';
+import { subirACloudinary } from '../../utils/imagenes';
 
 export default function CrearProductoView() {
   const [nombre, setNombre] = useState('');
@@ -8,6 +9,8 @@ export default function CrearProductoView() {
   const [categoriaNombre, setCategoriaNombre] = useState('');
   const [esPreparado, setEsPreparado] = useState(false);
   const [stockMinimoAlerta, setStockMinimoAlerta] = useState('5');
+  const [foto, setFoto] = useState(null);
+  const [vistaPrevia, setVistaPrevia] = useState('');
 
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(false);
@@ -27,6 +30,15 @@ export default function CrearProductoView() {
     setCategoriaNombre('');
     setEsPreparado(false);
     setStockMinimoAlerta('5');
+    setFoto(null);
+    setVistaPrevia('');
+  };
+
+  const elegirFoto = (e) => {
+    const archivo = e.target.files?.[0];
+    if (!archivo) return;
+    setFoto(archivo);
+    setVistaPrevia(URL.createObjectURL(archivo));
   };
 
   const handleGuardarProducto = async (e) => {
@@ -41,6 +53,16 @@ export default function CrearProductoView() {
       setCargando(true);
       setMensaje({ texto: '', tipo: '' });
 
+      let imagenUrl = '';
+      if (foto) {
+        try {
+          imagenUrl = await subirACloudinary(foto);
+        } catch (errFoto) {
+          setMensaje({ texto: errFoto.message, tipo: 'error' });
+          return;
+        }
+      }
+
       const respuesta = await cocinaService.crearProducto({
         nombre,
         descripcion,
@@ -48,6 +70,7 @@ export default function CrearProductoView() {
         categoriaNombre,
         esPreparado,
         stockMinimoAlerta: esPreparado ? 0 : (stockMinimoAlerta || 5),
+        imagenUrl,
       });
 
       setMensaje({ texto: respuesta.mensaje || 'Producto agregado con éxito.', tipo: 'exito' });
@@ -135,6 +158,14 @@ export default function CrearProductoView() {
                 ))}
               </datalist>
             </div>
+          </div>
+
+          <div style={estilos.grupoInput}>
+            <label style={estilos.label}>Foto (opcional)</label>
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={elegirFoto} />
+            {vistaPrevia && (
+              <img src={vistaPrevia} alt="Vista previa" width="96" height="96" style={{ marginTop: 8, borderRadius: 12, objectFit: 'cover' }} />
+            )}
           </div>
 
           <div style={estilos.grupoCheckbox}>

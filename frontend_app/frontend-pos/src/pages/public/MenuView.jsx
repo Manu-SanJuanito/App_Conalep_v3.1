@@ -5,6 +5,7 @@ import { useCart } from '../../contexts/CartContext';
 import { mensajeDeError } from '../../utils/errores';
 import Hoja from '../../components/Hoja';
 import Icono from '../../components/Icono';
+import FotoProducto from '../../components/FotoProducto';
 import theme from '../../theme';
 
 // Un set de colores para rotar el "ícono" de cada producto ya que no usamos fotos
@@ -146,9 +147,7 @@ const MenuView = () => {
 
                 return (
                   <div key={prod.id} style={estilos.tarjetaProducto}>
-                    <div style={{ ...estilos.iconoProducto, backgroundColor: colorParaProducto(prod.nombre) }}>
-                      {prod.nombre.charAt(0).toUpperCase()}
-                    </div>
+                    <FotoProducto producto={prod} color={colorParaProducto(prod.nombre)} tam={64} />
 
                     <div style={estilos.infoProducto}>
                       <h3 style={estilos.nombreProd}>{prod.nombre}</h3>

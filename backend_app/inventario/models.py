@@ -15,6 +15,8 @@ class Producto(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='productos')
     es_preparado = models.BooleanField(default=False) 
     stock_minimo_alerta = models.IntegerField(default=5)  
+    # Foto del producto (se sube a Cloudinary desde el panel y aquí solo se guarda la dirección).
+    imagen_url = models.URLField(max_length=300, blank=True, default='')
 
     def __str__(self):
         return self.nombre
